@@ -26,6 +26,9 @@ db.role = require('./role.model.js')(sequelize, Sequelize);
 db.department = require('./department.model.js')(sequelize, Sequelize);
 db.question = require('./question.model.js')(sequelize, Sequelize);
 db.feedback = require('./feedback.model.js')(sequelize, Sequelize);
+db.meeting = require('./meeting.model.js')(sequelize, Sequelize);
+db.meetingMinutes = require('./meetingMinutes.model.js')(sequelize, Sequelize);
+db.meetingAttendee = require('./meetingAttendee.model.js')(sequelize, Sequelize);
 
 // Define relationships
 
@@ -88,6 +91,60 @@ db.question.hasMany(db.feedback, { as: 'feedbacks' });
 db.feedback.belongsTo(db.question, {
   foreignKey: 'questionId',
   as: 'question'
+});
+
+// Meeting relationships
+db.department.hasMany(db.meeting, { as: 'meetings' });
+db.meeting.belongsTo(db.department, {
+  foreignKey: 'departmentId',
+  as: 'department'
+});
+
+db.user.hasMany(db.meeting, { as: 'createdMeetings', foreignKey: 'createdBy' });
+db.meeting.belongsTo(db.user, {
+  foreignKey: 'createdBy',
+  as: 'creator'
+});
+
+// Meeting Minutes relationships
+db.meeting.hasMany(db.meetingMinutes, { as: 'minutes' });
+db.meetingMinutes.belongsTo(db.meeting, {
+  foreignKey: 'meetingId',
+  as: 'meeting'
+});
+
+db.user.hasMany(db.meetingMinutes, { as: 'createdMinutes', foreignKey: 'createdBy' });
+db.meetingMinutes.belongsTo(db.user, {
+  foreignKey: 'createdBy',
+  as: 'creator'
+});
+
+db.user.hasMany(db.meetingMinutes, { as: 'updatedMinutes', foreignKey: 'updatedBy' });
+db.meetingMinutes.belongsTo(db.user, {
+  foreignKey: 'updatedBy',
+  as: 'updater'
+});
+
+// Meeting Attendee relationships
+db.meeting.belongsToMany(db.user, {
+  through: db.meetingAttendee,
+  foreignKey: 'meetingId',
+  otherKey: 'userId',
+  as: 'attendees'
+});
+
+db.user.belongsToMany(db.meeting, {
+  through: db.meetingAttendee,
+  foreignKey: 'userId',
+  otherKey: 'meetingId',
+  as: 'attendedMeetings'
+});
+
+// Feedback-Meeting relationship
+db.meeting.hasMany(db.feedback, { as: 'feedbacks' });
+db.feedback.belongsTo(db.meeting, {
+  foreignKey: 'meetingId',
+  as: 'meeting'
 });
 
 // Pre-defined roles

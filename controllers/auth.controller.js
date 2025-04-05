@@ -88,7 +88,7 @@ exports.signin = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).send({ message: 'User not found' });
+      return res.status(401).send({ message: 'User not found or invalid credentials. Please check your username and password.' });
     }
 
     // Check if user is active
@@ -100,7 +100,7 @@ exports.signin = async (req, res) => {
     const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
     if (!passwordIsValid) {
-      return res.status(401).send({ message: 'Invalid password' });
+      return res.status(401).send({ message: 'User not found or invalid credentials. Please check your username and password.' });
     }
 
     // Generate JWT token

@@ -20,6 +20,14 @@ module.exports = (sequelize, Sequelize) => {
     submittedAt: {
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW
+    },
+    meetingId: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'meetings',
+        key: 'id'
+      }
     }
   });
 

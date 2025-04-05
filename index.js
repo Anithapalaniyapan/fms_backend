@@ -21,6 +21,11 @@ app.use('/api/feedback', require('./routes/feedback.routes'));
 app.use('/api/questions', require('./routes/question.routes'));
 app.use('/api/departments', require('./routes/department.routes'));
 
+// Meeting routes
+require('./routes/meeting.routes')(app);
+require('./routes/meetingMinutes.routes')(app);
+require('./routes/meetingAttendee.routes')(app);
+
 // Simple route for testing
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Feedback Management System API.' });
